@@ -1,69 +1,90 @@
+from typing import Dict, List
 from abstract.SchemaGenerator import SchemaGenerator
-from unicode_utils.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
+from abstract.RunProfile import RunProfile
+from schema_generators.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
+from run_profiles.HelpRunProfile import HelpRunProfile
+from run_profiles.FileRewriteRunProfile import BulkFileRewriteRunProfile, SingleFileRewriteRunProfile
 import sys
 
 
-def show_help():
+def get_illegal_characters() -> List[str]:
     # TODO
-    print("--Help content-- todo")
+    print("TODO: Should get illegal characters!")
+    return []
 
 
-def bulk_file_rewrite(input_arguments: dict):
-    # TODO
-    print("todo")
+def get_user_input(upper_bound: int) -> int:
+    while True:
+        try:
+            inp = int(input())
+            if inp < 1 or inp > upper_bound:
+                print("Not a valid index. Please try again.")
+                return get_user_input(upper_bound)
+            else:
+                return inp
+        except ValueError:
+            print("Could not understand. Please try again.")
+            return get_user_input(upper_bound)
 
 
-def single_file_rewrite(input_arguments: dict):
-    # TODO
-    print("todo")
+def choose_schema_generator() -> SchemaGenerator:
+    print('\033[95m' + "Please choose a schema generator" + '\033[0m')
+    index = 0
+    for schema_generator in schema_generators:
+        print("Enter '" + (index + 1).__str__() + "' for " + schema_generator.name())
+        print("\t" + schema_generator.description())
+        index += 1
+    return schema_generators[get_user_input(index) - 1]
+
+
+def parse_supplied_arguments(run_profile: RunProfile, supplied_arguments: List[str]) -> Dict[str, str]:
+    index = 0
+    index_upper_bound = len(supplied_arguments)
+    profile_specific_arguments = run_profile.get_arguments()
+    result: Dict[str, str] = {}
+    while index < index_upper_bound:
+        argument = supplied_arguments[index]
+        if profile_specific_arguments.__contains__(argument):
+            if index + 1 >= index_upper_bound:
+                print('\033[91m' + "Argument '" + argument + "' expects a following input." + '\033[0m')
+            else:
+                result[argument] = supplied_arguments[index + 1]
+                index += 1
+        else:
+            print('\033[91m' + "Unrecognised argument '" + argument + "'" + '\033[0m')
+        index += 1
+    return result
 
 
 def main():
     args = sys.argv[1:]
 
-    user_parameterised_arguments = {}
-    run_profile = -1
+    run_profile: RunProfile = HelpRunProfile()
+    try:
+        profile_argument = args[0]
+        for profile in run_profiles:
+            if profile_argument == profile.command():
+                run_profile = profile
+                break
 
-    index = 0
-    index_upper_bound = len(args)
-    while index < index_upper_bound:
-        argument = args[index]
-        if run_profile_arguments.__contains__(argument):
-            if run_profile < 0:
-                run_profile = run_profile_arguments[argument][1]
-            else:
-                print('\033[91m' + "Cannot accept argument " + argument +
-                      ". Run profile already selected." + '\033[0m')
-        elif parameterised_arguments.keys().__contains__(argument):
-            if index + 1 >= index_upper_bound:
-                print('\033[91m' + "Argument '" + argument + "' expects a following input for "
-                      + parameterised_arguments[argument][0] + '\033[0m')
-            else:
-                user_parameterised_arguments[argument] = args[index + 1]
-                index += 1
-        else:
-            print("Unrecognised argument '" + argument + "'")
-        index += 1
+        supplied_arguments: Dict[str, str] = parse_supplied_arguments(run_profile, args[1:])
+        illegal_characters = get_illegal_characters()
+        schema = choose_schema_generator().generate_schema(illegal_characters)
+
+        run_profile.run(schema, supplied_arguments)
+    except IndexError:
+        run_profile.run({}, {})
 
 
-# Key = prefix
-# Value = Tuple pair
-#   pair[0] = Argument hint
-#   pair[1] = Associated run profile
-parameterised_arguments = {
-    "-f": ("File path (single file rewrite)", 1),
-    "-e": ("File extensions to match (bulk rewrite)", 2),
-    "-r": ("Regex pattern for file names (bulk rewrite)", 2),
-    "-d": ("Directory to be traversed (bulk rewrite)", 2)}
-# Key = prefix
-# Value = Tuple
-#   tuple[0] = Argument hint
-#   tuple[1] = Associated run profile
-#   tuple[2] = Associated function call
-run_profile_arguments = {
-    "-h": ("Help", 0, show_help),
-    "-s": ("Single file rewrite", 1, single_file_rewrite),
-    "-b": ("Bulk file rewrite", 2, bulk_file_rewrite)}
+schema_generators: List[SchemaGenerator] = [
+    UnicodeSchemaGenerator()
+]
+
+run_profiles: List[RunProfile] = [
+    HelpRunProfile(),
+    SingleFileRewriteRunProfile(),
+    BulkFileRewriteRunProfile()
+]
 
 main()
 
