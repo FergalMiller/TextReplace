@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Set
 from abstract.SchemaGenerator import SchemaGenerator
 from abstract.RunProfile import RunProfile
 from schema_generators.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
@@ -7,10 +7,18 @@ from run_profiles.FileRewriteRunProfile import BulkFileRewriteRunProfile, Single
 import sys
 
 
-def get_illegal_characters() -> List[str]:
-    # TODO
-    print("TODO: Should get illegal characters!")
-    return []
+def get_illegal_characters(illegal_characters_location) -> Set[str]:
+    illegal_characters = set()
+    try:
+        with open(illegal_characters_location) as illegal_characters_file:
+            content = illegal_characters_file.read().strip()
+            for c in list(content):
+                if not (c == ' ' or c == '\n'):
+                    illegal_characters.add(c)
+    except FileNotFoundError:
+        print("Error! Illegal character file not present under path '", illegal_characters_location + "'")
+        illegal_characters = get_illegal_characters(input("Enter the path of your illegal characters text file:"))
+    return illegal_characters
 
 
 def get_user_input(upper_bound: int) -> int:
@@ -68,7 +76,10 @@ def main():
                 break
 
         supplied_arguments: Dict[str, str] = parse_supplied_arguments(run_profile, args[1:])
-        illegal_characters = get_illegal_characters()
+
+        illegal_characters = get_illegal_characters("illegal_characters.txt")
+        print("Using illegal character set: ", illegal_characters)
+
         schema = choose_schema_generator().generate_schema(illegal_characters)
 
         run_profile.run(schema, supplied_arguments)

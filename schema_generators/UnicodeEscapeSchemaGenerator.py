@@ -2,12 +2,13 @@ import os
 import re
 
 from abstract.SchemaGenerator import SchemaGenerator
+from typing import Dict, Set
 
 
 class UnicodeSchemaGenerator(SchemaGenerator):
 
     @staticmethod
-    def generate_schema(illegal_characters: list) -> dict:
+    def generate_schema(illegal_characters: Set[str]) -> Dict[str, str]:
         schema = {}
         escape_pattern = r'\\u[0-9a-fA-F][0-9a-fA-F][0-9a-fA-F][0-9a-fA-F]'
 
