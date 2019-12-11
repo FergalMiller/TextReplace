@@ -2,10 +2,12 @@ from abc import ABC, abstractmethod
 from typing import Dict, List
 from run_profiles.argument.Argument import Argument, ArgumentError
 
+import re
+
 
 class RunProfile(ABC):
     @abstractmethod
-    def run(self, schema: Dict[str, str], arguments: Dict[str, str]): pass
+    def run(self, schema: Dict[str, str]): pass
 
     @abstractmethod
     def get_arguments(self) -> List[Argument]: pass
@@ -14,9 +16,39 @@ class RunProfile(ABC):
     @abstractmethod
     def command() -> str: pass
 
-    def validate_arguments(self, supplied_arguments: Dict[str, str]) -> None:
+    @abstractmethod
+    def __init__(self, supplied_arguments: str):
+        self.parse_supplied_arguments(supplied_arguments)
+        self.validate_arguments()
+
+    def get_argument(self, key: str) -> Argument:
         for argument in self.get_arguments():
-            if argument.required:
-                if not supplied_arguments.__contains__(argument.prefix):
-                    raise ArgumentError("Required argument '" + argument.prefix +
-                                        "' (" + argument.hint + ") to run with this profile")
+            if argument.key == key:
+                return argument
+        raise ArgumentError("Could not find argument with key " + key + ".")
+
+    def get_argument_value(self, key: str) -> str:
+        return self.get_argument(key).value
+
+    def supply_argument_value(self, key: str, value: str):
+        for argument in self.get_arguments():
+            if argument.key == key:
+                argument.value = value
+                return
+        raise ArgumentError("Could not associate value " + value + ". No argument prefix found for " + key + ".")
+
+    def parse_supplied_arguments(self, supplied_arguments: str):
+        argument_pattern = r'(\-\w\s?[\w\-\\\/.]+)'
+        supplied_arguments: List[str] = re.split(argument_pattern, supplied_arguments)
+        for supplied_argument in supplied_arguments:
+            if not supplied_argument == "":
+                argument_matcher = re.match(r'(-\w)\s?([\w\-\\/.]+)', supplied_argument)
+                key = argument_matcher.group(1)
+                value = argument_matcher.group(2)
+                self.supply_argument_value(key, value)
+
+    def validate_arguments(self):
+        for argument in self.get_arguments():
+            if argument.required and argument.value == "":
+                raise ArgumentError("Required argument '" + argument.key +
+                                    "' (" + argument.hint + ") to run with this profile")

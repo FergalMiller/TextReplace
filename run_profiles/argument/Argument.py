@@ -1,15 +1,17 @@
 class Argument:
-    prefix: str
+    key: str
     hint: str
     required: bool
+    value: str
 
     def __init__(self, prefix, hint, required):
-        self.prefix = prefix
+        self.key = prefix
         self.hint = hint
         self.required = required
+        self.value = ""
 
     def __eq__(self, other: str):
-        return self.prefix == other
+        return self.key == other
 
 
 class ArgumentError(Exception):

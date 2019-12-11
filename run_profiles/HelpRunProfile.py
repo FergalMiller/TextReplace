@@ -4,13 +4,19 @@ from typing import Dict, List
 
 
 class HelpRunProfile(RunProfile):
-    arguments = []
 
-    def run(self, schema: Dict[str, str], arguments: Dict[str, str]):
+    def run(self, schema: Dict[str, str]):
         # TODO
-        print(self.arguments)
+        print("TODO")
+
+    def __init__(self, supplied_arguments: str):
+        super().__init__(supplied_arguments)
+
+    def parse_supplied_arguments(self, supplied_arguments: str): pass
+
+    def validate_arguments(self): pass
 
     @staticmethod
     def command() -> str: return "-h"
 
-    def get_arguments(self) -> List[Argument]: return self.arguments
+    def get_arguments(self) -> List[Argument]: return []

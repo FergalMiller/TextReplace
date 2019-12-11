@@ -1,4 +1,4 @@
-from typing import Dict, List, Set
+from typing import Dict, List, Set, Type
 from abstract.SchemaGenerator import SchemaGenerator
 from abstract.RunProfile import RunProfile
 from schema_generators.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
@@ -67,35 +67,32 @@ def parse_supplied_arguments(run_profile: RunProfile, supplied_arguments: List[s
 def main():
     args = sys.argv[1:]
 
-    run_profile: RunProfile = HelpRunProfile()
+    run_profile: RunProfile = HelpRunProfile("")
     try:
         profile_argument = args[0]
         for profile in run_profiles:
             if profile_argument == profile.command():
-                run_profile = profile
+                run_profile = profile(" ".join(args[1:]))
                 break
-
-        supplied_arguments: Dict[str, str] = parse_supplied_arguments(run_profile, args[1:])
 
         illegal_characters = get_illegal_characters("illegal_characters.txt")
         print("Using illegal character set: ", illegal_characters)
 
         schema = choose_schema_generator().generate_schema(illegal_characters)
 
-        run_profile.run(schema, supplied_arguments)
+        run_profile.run(schema)
     except IndexError:
-        run_profile.run({}, {})
+        run_profile.run({})
 
 
 schema_generators: List[SchemaGenerator] = [
     UnicodeSchemaGenerator()
 ]
 
-run_profiles: List[RunProfile] = [
-    HelpRunProfile(),
-    SingleFileRewriteRunProfile(),
-    BulkFileRewriteRunProfile()
+run_profiles: List[Type[RunProfile]] = [
+    HelpRunProfile,
+    SingleFileRewriteRunProfile,
+    BulkFileRewriteRunProfile
 ]
 
 main()
-
