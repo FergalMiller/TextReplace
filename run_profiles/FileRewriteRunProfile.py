@@ -33,6 +33,22 @@ class BulkFileRewriteRunProfile(RunProfile):
     def __init__(self, supplied_arguments: str):
         super().__init__(supplied_arguments)
 
+    def verify_file_against_filters(self, directory: str, file_name: str, extension: str) -> bool:
+        # Counts as matching if no value is required
+        matches_extension_filter = self.get_argument_value("-e") == ""
+        matches_pattern_filter =  self.get_argument_value("-r") == ""
+
+        # Any non-matching filters are verified
+        if not matches_extension_filter and extension.__eq__(self.get_argument_value("-e")):
+            matches_extension_filter = True
+        if not matches_pattern_filter:
+            custom_pattern = self.get_argument_value("-r")
+            if re.search(custom_pattern, file_name):
+                matches_pattern_filter = True
+
+        # File is verified if all filter matches true
+        return matches_extension_filter and matches_pattern_filter
+
     def filter_target_files(self, target_files: List[str]) -> List[str]:
         filter_extensions = self.get_argument_value("-e") != ""
         filter_by_regex_pattern = self.get_argument_value("-r") != ""
@@ -47,10 +63,8 @@ class BulkFileRewriteRunProfile(RunProfile):
                     directory = matcher.group(1)
                     file_name = matcher.group(3)
                     extension = matcher.group(4)
-                    if filter_extensions and extension.__eq__(self.get_argument_value("-e")):
+                    if self.verify_file_against_filters(directory, file_name, extension):
                         result.append(target_file)
-                    # TODO: Regex pattern matching filtering
-                    # print("dir:" + directory + ". ext:" + extension + ". file:" + file_name)
         return result
 
     def run(self, schema: Dict[str, str]):
@@ -61,8 +75,15 @@ class BulkFileRewriteRunProfile(RunProfile):
                 target_files.append(os.path.join(root, file))
 
         print("Checked files: ", target_files)
-        # TODO: Filter list by extension and regex, then rewrite each file.
-        print("Filtered target files: ", self.filter_target_files(target_files))
+
+        target_files = self.filter_target_files(target_files)
+
+        print("Filtered target files: ", target_files)
+
+        # TODO: Validate choices with user before rewriting!
+        for target_file in target_files:
+            print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
+            FileLineByLineReWriter.rewrite(target_file, schema)
 
     @staticmethod
     def command() -> str: return "-b"
