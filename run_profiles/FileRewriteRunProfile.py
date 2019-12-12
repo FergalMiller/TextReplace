@@ -37,7 +37,7 @@ class BulkFileRewriteRunProfile(RunProfile):
         filter_extensions = self.get_argument_value("-e") != ""
         filter_by_regex_pattern = self.get_argument_value("-r") != ""
 
-        file_path_pattern = r'([/[\w,-\.]+]*/)*([\w,-]+)\.+([A-Za-z]+)$'
+        file_path_pattern = r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$'
         result: List[str] = []
 
         if filter_extensions or filter_by_regex_pattern:
@@ -45,9 +45,12 @@ class BulkFileRewriteRunProfile(RunProfile):
                 if re.search(file_path_pattern, target_file):
                     matcher = re.match(file_path_pattern, target_file)
                     directory = matcher.group(1)
-                    file_name = matcher.group(2)
-                    extension = matcher.group(3)
-                    # TODO: Employ helper methods to filter list to result list
+                    file_name = matcher.group(3)
+                    extension = matcher.group(4)
+                    if filter_extensions and extension.__eq__(self.get_argument_value("-e")):
+                        result.append(target_file)
+                    # TODO: Regex pattern matching filtering
+                    # print("dir:" + directory + ". ext:" + extension + ". file:" + file_name)
         return result
 
     def run(self, schema: Dict[str, str]):
@@ -58,8 +61,8 @@ class BulkFileRewriteRunProfile(RunProfile):
                 target_files.append(os.path.join(root, file))
 
         print("Checked files: ", target_files)
-
         # TODO: Filter list by extension and regex, then rewrite each file.
+        print("Filtered target files: ", self.filter_target_files(target_files))
 
     @staticmethod
     def command() -> str: return "-b"
@@ -69,7 +72,10 @@ class BulkFileRewriteRunProfile(RunProfile):
 
 # Single file re-write profile
 class SingleFileRewriteRunProfile(RunProfile):
-    arguments: List[Argument] = [Argument("-p", "The file path.", True, "")]
+    arguments: List[Argument] = [Argument("-p",
+                                          "The file path.",
+                                          True,
+                                          r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
 
     def __init__(self, supplied_arguments: str):
         super().__init__(supplied_arguments)
