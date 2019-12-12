@@ -51,7 +51,15 @@ class RunProfile(ABC):
                     print("Could not understand argument: ", supplied_argument)
 
     def validate_arguments(self):
+        error_found = False
         for argument in self.get_arguments():
-            if argument.required and argument.value == "":
-                raise ArgumentError("Required argument '" + argument.key +
-                                    "' (" + argument.hint + ") to run with this profile")
+            try:
+                argument.self_validate()
+            except ArgumentError as e:
+                error_found = True
+                # TODO: Update color highlighting on this error
+                print('\033[93m' + "Argument error: " + e.reason + '\033[0m')
+        if error_found:
+            print("Exiting...")
+            exit(1)
+

@@ -25,9 +25,9 @@ class FileLineByLineReWriter:
 # Bulk file rewrite profile
 class BulkFileRewriteRunProfile(RunProfile):
     arguments: List[Argument] = [
-        Argument("-d", "The directory to traverse.", True),
-        Argument("-e", "The file extension to search for.", False),
-        Argument("-r", "The regex pattern to match file names.", False)
+        Argument("-d", "The directory to traverse.", True, r'^/?([\w\-\.]+/)+$'),
+        Argument("-e", "The file extension to search for.", False, r'^\.?[a-z][a-zA-Z]*$'),
+        Argument("-r", "The regex pattern to match file names.", False, "")
     ]
 
     def __init__(self, supplied_arguments: str):
@@ -51,7 +51,6 @@ class BulkFileRewriteRunProfile(RunProfile):
         return result
 
     def run(self, schema: Dict[str, str]):
-        # TODO: Manage update to Argument class now that arguments are instance variables in a profile.
         root_search_directory = self.get_argument_value("-d")
         target_files = []
         for root, dirs, files in os.walk(root_search_directory):
@@ -70,7 +69,7 @@ class BulkFileRewriteRunProfile(RunProfile):
 
 # Single file re-write profile
 class SingleFileRewriteRunProfile(RunProfile):
-    arguments: List[Argument] = [Argument("-p", "The file path.", True)]
+    arguments: List[Argument] = [Argument("-p", "The file path.", True, "")]
 
     def __init__(self, supplied_arguments: str):
         super().__init__(supplied_arguments)
