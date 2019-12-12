@@ -42,10 +42,13 @@ class RunProfile(ABC):
         supplied_arguments: List[str] = re.split(argument_pattern, supplied_arguments)
         for supplied_argument in supplied_arguments:
             if not supplied_argument == "":
-                argument_matcher = re.match(r'(-\w)\s?([\w\-\\/.]+)', supplied_argument)
-                key = argument_matcher.group(1)
-                value = argument_matcher.group(2)
-                self.supply_argument_value(key, value)
+                try:
+                    argument_matcher = re.match(r'(-\w)\s?([\w\-\\/.]+)', supplied_argument)
+                    key = argument_matcher.group(1)
+                    value = argument_matcher.group(2)
+                    self.supply_argument_value(key, value)
+                except AttributeError:
+                    print("Could not understand argument: ", supplied_argument)
 
     def validate_arguments(self):
         for argument in self.get_arguments():
