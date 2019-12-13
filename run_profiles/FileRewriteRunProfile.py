@@ -3,7 +3,7 @@ import re
 from typing import Dict, List
 
 from abstract.RunProfile import RunProfile
-from run_profiles.argument.Argument import Argument, ArgumentError
+from run_profiles.argument.Argument import Argument
 
 
 class FileLineByLineReWriter:
@@ -74,16 +74,25 @@ class BulkFileRewriteRunProfile(RunProfile):
             for file in files:
                 target_files.append(os.path.join(root, file))
 
-        print("Checked files: ", target_files)
-
         target_files = self.filter_target_files(target_files)
 
-        print("Filtered target files: ", target_files)
-
-        # TODO: Validate choices with user before rewriting!
+        print('\033[92m' + "Identified target files for re-write: ")
         for target_file in target_files:
-            print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
-            FileLineByLineReWriter.rewrite(target_file, schema)
+            print(target_file)
+        print('\033[0m')
+
+        while True:
+            user_inp = input("Are you sure you want to carry out re-write on all files listed (y/n)? ")
+            if user_inp == "y":
+                for target_file in target_files:
+                    print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
+                    FileLineByLineReWriter.rewrite(target_file, schema)
+                break
+            elif user_inp == "n":
+                print("Exiting without rewriting...")
+                break
+            else:
+                print("Unrecognised input. Please write 'y' for yes, 'n' for no.")
 
     @staticmethod
     def command() -> str: return "-b"

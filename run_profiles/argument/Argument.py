@@ -1,7 +1,7 @@
 import re
 
 
-class Argument:
+class Argument(object):
     key: str
     hint: str
     required: bool

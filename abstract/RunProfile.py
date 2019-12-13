@@ -57,8 +57,7 @@ class RunProfile(ABC):
                 argument.self_validate()
             except ArgumentError as e:
                 error_found = True
-                # TODO: Update color highlighting on this error
-                print('\033[93m' + "Argument error: " + e.reason + '\033[0m')
+                print('\033[91m' + "Argument error: " + e.reason + '\033[0m')
         if error_found:
             print("Exiting...")
             exit(1)
