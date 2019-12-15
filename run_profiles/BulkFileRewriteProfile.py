@@ -71,7 +71,6 @@ class BulkRunProfile(RunProfile):
             if user_inp == "y":
                 for target_file in target_files:
                     print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
-                    # TODO: run
                     file_rewrite_profile.run(target_file)
 
                 break

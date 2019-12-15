@@ -1,10 +1,8 @@
 from typing import Pattern
-
-
-# TODO: Validate that write command does not have out of bound groups
 from file_rewrite_profiles.regex_replacer.RegexRewriteCommand import RegexReWriteCommand
 
 
+# TODO: Validate that write command does not have out of bound groups
 class RegexFileReWriter(object):
     pattern: Pattern[str]
     rewrite_command: RegexReWriteCommand
@@ -44,6 +42,7 @@ class RegexFileReWriter(object):
             to_match = target_file.read()
             result = self.recursive_match_result(to_match)
             print(result)
+            # TODO: Rewrite file with result
 
 
 '''re_writer = RegexFileReWriter(re.compile('(/\\*\\*)\\s*\\n\\s*\\*(.*)\\n\\s*(\\*/)'),

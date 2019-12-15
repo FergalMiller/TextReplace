@@ -19,7 +19,6 @@ class SingleRunProfile(RunProfile):
 
         print('\033[92m' + "Replacing illegal characters in `" + target_file_path + "`" + '\033[0m')
 
-        # TODO: run
         file_rewrite_profile.run(target_file_path)
 
     @staticmethod
