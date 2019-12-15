@@ -5,7 +5,7 @@ import re
 from typing import List, Pattern
 
 
-class RegexReWriteCommand(object):
+class RegexRewriteCommand(object):
     group_to_replace: int
     replace_with: List[str]
     arguments = List[str]
@@ -32,7 +32,7 @@ class RegexReWriteCommand(object):
         return result
 
 
-class RegexReWriteCommandBuilder(object):
+class RegexRewriteCommandBuilder(object):
     group_to_replace: int
     replace_with: List[str]
     arguments = List[str]
@@ -50,5 +50,5 @@ class RegexReWriteCommandBuilder(object):
         self.replace_with = replace_with
         return self
 
-    def build(self) -> RegexReWriteCommand:
-        return RegexReWriteCommand(self.group_to_replace, self.replace_with, self.arguments)
+    def build(self) -> RegexRewriteCommand:
+        return RegexRewriteCommand(self.group_to_replace, self.replace_with, self.arguments)

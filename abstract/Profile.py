@@ -38,13 +38,13 @@ class Profile(ABC):
         raise ArgumentError("Could not associate value " + value + ". No argument prefix found for " + key + ".")
 
     def parse_supplied_arguments(self, supplied_arguments: str):
-        argument_pattern = re.compile(r'(-\w\s?[\w\-\\/.]+)')
+        argument_pattern = re.compile(r'(-\w+\s?[^\s]+)')
         supplied_arguments: List[str] = argument_pattern.split(supplied_arguments)
         for supplied_argument in supplied_arguments:
             supplied_argument = supplied_argument.strip()
             if not supplied_argument == "":
                 try:
-                    argument_matcher = re.match(r'(-\w)\s?([\w\-\\/.]+)', supplied_argument)
+                    argument_matcher = re.match(r'(-\w+)\s?([^\s]+)', supplied_argument)
                     key = argument_matcher.group(1)
                     value = argument_matcher.group(2)
                     self.supply_argument_value(key, value)

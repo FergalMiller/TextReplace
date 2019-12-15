@@ -1,18 +1,33 @@
-from typing import Pattern
-from file_rewrite_profiles.regex_replacer.RegexRewriteCommand import RegexReWriteCommand
+from typing import Pattern, List
+from file_rewrite_profiles.regex_replacer.RegexRewriteCommand import RegexRewriteCommand
 
 
 # TODO: Validate that write command does not have out of bound groups
 class RegexFileReWriter(object):
     pattern: Pattern[str]
-    rewrite_command: RegexReWriteCommand
+    rewrite_commands: List[RegexRewriteCommand]
 
-    def __init__(self, pattern: Pattern[str], rewrite_command: RegexReWriteCommand):
+    def __init__(self, pattern: Pattern[str], rewrite_commands: List[RegexRewriteCommand]):
         self.pattern = pattern
-        self.rewrite_command = rewrite_command
+        self.rewrite_commands = rewrite_commands
 
     def modify_match(self, full_match: str) -> str:
-        match_split = self.pattern.split(full_match)
+        result = full_match
+        for rewrite_command in self.rewrite_commands:
+            if self.pattern.search(result):
+                match_split = self.pattern.split(full_match)
+                to_replace: str
+                if rewrite_command.group_to_replace == 0:
+                    to_replace = full_match
+                else:
+                    to_replace = match_split[rewrite_command.group_to_replace]
+                replace_with = rewrite_command.get_replacement(full_match, self.pattern)
+                result = result.replace(to_replace, replace_with)
+            else:
+                break
+        return result
+
+        '''match_split = self.pattern.split(full_match)
 
         to_replace: str
         if self.rewrite_command.group_to_replace == 0:
@@ -22,7 +37,7 @@ class RegexFileReWriter(object):
 
         replace_with = self.rewrite_command.get_replacement(full_match, self.pattern)
 
-        return full_match.replace(to_replace, replace_with)
+        return full_match.replace(to_replace, replace_with)'''
 
     def recursive_match_result(self, to_match: str) -> str:
         search = self.pattern.search(to_match)
@@ -30,7 +45,7 @@ class RegexFileReWriter(object):
             full_match = self.pattern.search(to_match).group(0)
             no_of_groups = self.pattern.groups
             match_split = self.pattern.split(to_match, 1)
-            modified_match = "(" + self.modify_match(full_match) + ")"
+            modified_match = self.modify_match(full_match)
             return \
                 match_split[0] + \
                 modified_match + \
@@ -38,11 +53,14 @@ class RegexFileReWriter(object):
         return to_match
 
     def rewrite_file(self, target_file_path: str):
-        with open(target_file_path) as target_file:
+        result: str = ""
+        with open(target_file_path, 'r') as target_file:
             to_match = target_file.read()
             result = self.recursive_match_result(to_match)
             print(result)
-            # TODO: Rewrite file with result
+        '''with open(target_file_path, 'w') as target_file:
+            target_file.write(result)'''
+
 
 
 '''re_writer = RegexFileReWriter(re.compile('(/\\*\\*)\\s*\\n\\s*\\*(.*)\\n\\s*(\\*/)'),
