@@ -1,24 +1,15 @@
-from typing import Dict, List, Set, Type
-from abstract.SchemaGenerator import SchemaGenerator
-from abstract.RunProfile import RunProfile
-from schema_generators.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
-from run_profiles.HelpRunProfile import HelpRunProfile
-from run_profiles.FileRewriteRunProfile import BulkFileRewriteRunProfile, SingleFileRewriteRunProfile
+import re
 import sys
+from typing import Dict, List, Type
 
-
-def get_illegal_characters(illegal_characters_location) -> Set[str]:
-    illegal_characters = set()
-    try:
-        with open(illegal_characters_location) as illegal_characters_file:
-            content = illegal_characters_file.read().strip()
-            for c in list(content):
-                if not (c == ' ' or c == '\n'):
-                    illegal_characters.add(c)
-    except FileNotFoundError:
-        print("Error! Illegal character file not present under path '", illegal_characters_location + "'")
-        illegal_characters = get_illegal_characters(input("Enter the path of your illegal characters text file:"))
-    return illegal_characters
+from abstract.FileRewriteProfile import FileRewriteProfile
+from abstract.RunProfile import RunProfile
+from abstract.SchemaGenerator import SchemaGenerator
+from file_rewrite_profiles.regex_replacer.RegexReplacerRewriteProfile import RegexReplacerRewriteProfile
+from file_rewrite_profiles.unicode_replacer.UnicodeReplacerRewriteProfile import UnicodeReplacerRewriteProfile
+from run_profiles.BulkFileRewriteProfile import BulkRunProfile
+from run_profiles.SingleFileRewriteProfile import SingleRunProfile
+from schema_generators.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
 
 
 def get_user_input(upper_bound: int) -> int:
@@ -64,35 +55,63 @@ def parse_supplied_arguments(run_profile: RunProfile, supplied_arguments: List[s
     return result
 
 
+def match_run_profile_type(prefix: str) -> Type[RunProfile]:
+    for profile in run_profiles:
+        if prefix == profile.command():
+            return profile
+    raise Exception("No run profile with prefix ", prefix)
+
+
+def match_file_rewrite_profile_type(prefix: str) -> Type[FileRewriteProfile]:
+    for profile in file_rewrite_profiles:
+        if prefix == profile.command():
+            return profile
+    raise Exception("No rewrite profile with prefix ", prefix)
+
+
 def main():
     args = sys.argv[1:]
+    command = " ".join(sys.argv[1:])
+    print("Command:", command)
+    command_search = command_pattern.search(command)
 
-    run_profile: RunProfile = HelpRunProfile("")
-    try:
-        profile_argument = args[0]
-        for profile in run_profiles:
-            if profile_argument == profile.command():
-                run_profile = profile(" ".join(args[1:]))
-                break
+    run_profile_prefix: str = ""
+    run_profile_args: str = ""
+    rewrite_profile_prefix: str = ""
+    rewrite_profile_args: str = ""
 
-        illegal_characters = get_illegal_characters("illegal_characters.txt")
-        print("Using illegal character set: ", illegal_characters)
+    if command_search:
+        run_profile_prefix = command_search.group(1)
+        run_profile_args = command_search.group(2)
+        rewrite_profile_prefix = command_search.group(3)
+        rewrite_profile_args = command_search.group(4)
+    else:
+        # TODO: Handle this
+        exit(20)
 
-        schema = choose_schema_generator().generate_schema(illegal_characters)
+    run_profile_type: Type[RunProfile] = match_run_profile_type(run_profile_prefix)
+    rewrite_profile_type: Type[FileRewriteProfile] = match_file_rewrite_profile_type(rewrite_profile_prefix)
 
-        run_profile.run(schema)
-    except IndexError:
-        run_profile.run({})
+    run_profile: RunProfile = run_profile_type(run_profile_args)
+    rewrite_profile: FileRewriteProfile = rewrite_profile_type(rewrite_profile_args)
 
+    run_profile.run(rewrite_profile)
+
+
+command_pattern = re.compile(r'(-[a-z]+)\[(.*)\]\s*(-[a-z]+)\[(.*)\]')
 
 schema_generators: List[SchemaGenerator] = [
     UnicodeSchemaGenerator()
 ]
 
 run_profiles: List[Type[RunProfile]] = [
-    HelpRunProfile,
-    SingleFileRewriteRunProfile,
-    BulkFileRewriteRunProfile
+    SingleRunProfile,
+    BulkRunProfile
+]
+
+file_rewrite_profiles: List[Type[FileRewriteProfile]] = [
+    UnicodeReplacerRewriteProfile,
+    RegexReplacerRewriteProfile
 ]
 
 main()

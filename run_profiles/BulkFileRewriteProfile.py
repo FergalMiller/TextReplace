@@ -1,23 +1,22 @@
 import os
 import re
-from typing import Dict, List
+from typing import List
 
+from abstract.FileRewriteProfile import FileRewriteProfile
 from abstract.RunProfile import RunProfile
-from run_profiles.argument.Argument import Argument
-from file_writers.LineByLineReWriter import LineByLineReWriter
-from file_writers.RegexReplacerReWriter import RegexFileReWriter
+from common.argument.Argument import Argument
 
 
 # Bulk file rewrite profile
-class BulkFileRewriteRunProfile(RunProfile):
+class BulkRunProfile(RunProfile):
     arguments: List[Argument] = [
         Argument("-d", "The directory to traverse.", True, r'^/?([\w\-\.]+/)+$'),
         Argument("-e", "The file extension to search for.", False, r'^\.?[a-z][a-zA-Z]*$'),
         Argument("-r", "The regex pattern to match file names.", False, "")
     ]
 
-    def __init__(self, supplied_arguments: str):
-        super().__init__(supplied_arguments)
+    def __init__(self, rewrite_profile_arguments: str):
+        super().__init__(rewrite_profile_arguments)
 
     def verify_file_against_filters(self, directory: str, file_name: str, extension: str) -> bool:
         # Counts as matching if no value is required
@@ -53,7 +52,7 @@ class BulkFileRewriteRunProfile(RunProfile):
                         result.append(target_file)
         return result
 
-    def run(self, schema: Dict[str, str]):
+    def run(self, file_rewrite_profile: FileRewriteProfile):
         root_search_directory = self.get_argument_value("-d")
         target_files = []
         for root, dirs, files in os.walk(root_search_directory):
@@ -72,7 +71,9 @@ class BulkFileRewriteRunProfile(RunProfile):
             if user_inp == "y":
                 for target_file in target_files:
                     print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
-                    LineByLineReWriter.rewrite(target_file, schema)
+                    # TODO: run
+                    file_rewrite_profile.run(target_file)
+
                 break
             elif user_inp == "n":
                 print("Exiting without rewriting...")
@@ -82,29 +83,5 @@ class BulkFileRewriteRunProfile(RunProfile):
 
     @staticmethod
     def command() -> str: return "-b"
-
-    def get_arguments(self) -> List[Argument]: return self.arguments
-
-
-# Single file re-write profile
-class SingleFileRewriteRunProfile(RunProfile):
-    arguments: List[Argument] = [Argument("-p",
-                                          "The file path.",
-                                          True,
-                                          r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
-
-    def __init__(self, supplied_arguments: str):
-        super().__init__(supplied_arguments)
-
-    def run(self, schema: Dict[str, str]):
-
-        target_file_path = self.get_argument_value("-p")
-
-        print('\033[92m' + "Replacing illegal characters in `" + target_file_path + "`" + '\033[0m')
-
-        LineByLineReWriter.rewrite(target_file_path, schema)
-
-    @staticmethod
-    def command() -> str: return "-s"
 
     def get_arguments(self) -> List[Argument]: return self.arguments

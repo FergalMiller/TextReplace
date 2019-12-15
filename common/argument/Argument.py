@@ -1,5 +1,7 @@
 import re
 
+from common.argument.ArgumentError import ArgumentError
+
 
 class Argument(object):
     key: str
@@ -33,11 +35,3 @@ class Argument(object):
                 raise ArgumentError("Value supplied to argument " + self.key +
                                     " (" + self.value + ") does not adhere to value regex pattern: " +
                                     self.value_pattern)
-
-
-class ArgumentError(Exception):
-    reason: str
-
-    def __init__(self, reason):
-        super()
-        self.reason = reason
