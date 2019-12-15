@@ -4,22 +4,8 @@ from typing import Dict, List
 
 from abstract.RunProfile import RunProfile
 from run_profiles.argument.Argument import Argument
-
-
-class FileLineByLineReWriter:
-    @staticmethod
-    def rewrite(target_file_path: str, schema: Dict[str, str]):
-        with open(target_file_path, "r") as target_file:
-            lines = target_file.readlines()
-            index = 0
-            for line in lines:
-                for illegal_character in schema.keys():
-                    line = line.replace(illegal_character, schema[illegal_character])
-                lines[index] = line.__str__()
-                index += 1
-
-        with open(target_file_path, "w") as target_file:
-            target_file.writelines(lines)
+from file_writers.LineByLineReWriter import LineByLineReWriter
+from file_writers.RegexReplacerReWriter import RegexFileReWriter
 
 
 # Bulk file rewrite profile
@@ -36,7 +22,7 @@ class BulkFileRewriteRunProfile(RunProfile):
     def verify_file_against_filters(self, directory: str, file_name: str, extension: str) -> bool:
         # Counts as matching if no value is required
         matches_extension_filter = self.get_argument_value("-e") == ""
-        matches_pattern_filter =  self.get_argument_value("-r") == ""
+        matches_pattern_filter = self.get_argument_value("-r") == ""
 
         # Any non-matching filters are verified
         if not matches_extension_filter and extension.__eq__(self.get_argument_value("-e")):
@@ -86,7 +72,7 @@ class BulkFileRewriteRunProfile(RunProfile):
             if user_inp == "y":
                 for target_file in target_files:
                     print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
-                    FileLineByLineReWriter.rewrite(target_file, schema)
+                    LineByLineReWriter.rewrite(target_file, schema)
                 break
             elif user_inp == "n":
                 print("Exiting without rewriting...")
@@ -116,7 +102,7 @@ class SingleFileRewriteRunProfile(RunProfile):
 
         print('\033[92m' + "Replacing illegal characters in `" + target_file_path + "`" + '\033[0m')
 
-        FileLineByLineReWriter.rewrite(target_file_path, schema)
+        LineByLineReWriter.rewrite(target_file_path, schema)
 
     @staticmethod
     def command() -> str: return "-s"
