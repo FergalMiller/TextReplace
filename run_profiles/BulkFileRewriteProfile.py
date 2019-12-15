@@ -38,13 +38,13 @@ class BulkRunProfile(RunProfile):
         filter_extensions = self.get_argument_value("-e") != ""
         filter_by_regex_pattern = self.get_argument_value("-r") != ""
 
-        file_path_pattern = r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$'
+        file_path_pattern = re.compile(r'^(/?([\w\-.]+/)+)*([\w\-.]+)\.([a-z][a-zA-Z]*)$')
         result: List[str] = []
 
         if filter_extensions or filter_by_regex_pattern:
             for target_file in target_files:
-                if re.search(file_path_pattern, target_file):
-                    matcher = re.match(file_path_pattern, target_file)
+                if file_path_pattern.search(target_file):
+                    matcher = file_path_pattern.match(target_file)
                     directory = matcher.group(1)
                     file_name = matcher.group(3)
                     extension = matcher.group(4)
@@ -72,7 +72,6 @@ class BulkRunProfile(RunProfile):
                 for target_file in target_files:
                     print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
                     file_rewrite_profile.run(target_file)
-
                 break
             elif user_inp == "n":
                 print("Exiting without rewriting...")

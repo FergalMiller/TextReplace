@@ -27,18 +27,6 @@ class RegexFileReWriter(object):
                 break
         return result
 
-        '''match_split = self.pattern.split(full_match)
-
-        to_replace: str
-        if self.rewrite_command.group_to_replace == 0:
-            to_replace = full_match
-        else:
-            to_replace = match_split[self.rewrite_command.group_to_replace]
-
-        replace_with = self.rewrite_command.get_replacement(full_match, self.pattern)
-
-        return full_match.replace(to_replace, replace_with)'''
-
     def recursive_match_result(self, to_match: str) -> str:
         search = self.pattern.search(to_match)
         if search:
@@ -53,16 +41,10 @@ class RegexFileReWriter(object):
         return to_match
 
     def rewrite_file(self, target_file_path: str):
-        result: str = ""
+        result: str
         with open(target_file_path, 'r') as target_file:
             to_match = target_file.read()
             result = self.recursive_match_result(to_match)
             print(result)
-        '''with open(target_file_path, 'w') as target_file:
-            target_file.write(result)'''
-
-
-
-'''re_writer = RegexFileReWriter(re.compile('(/\\*\\*)\\s*\\n\\s*\\*(.*)\\n\\s*(\\*/)'),
-                              RegexReWriteCommand(0, ['1', '2', '{0}', '3'], [". "]))
-re_writer.rewrite_file("../test.txt")'''
+        with open(target_file_path, 'w') as target_file:
+            target_file.write(result)
