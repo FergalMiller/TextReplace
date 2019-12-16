@@ -47,12 +47,32 @@ Note: Does require `native2ascii` to be installed on your system.
 - arg: `-p` the regex pattern to match within the file text
     - example: `-p ^(\w)\.$`
 - arg: `-c` the regex rewrite command
+    - command that indicates how to modify the regex matches found
+    - multiple commands can be supplied. They will be run in the order that they are given as input.
     - example: `-c 1(2,{0})`
+        - "1" is the regex group to replace
+        - "(2, {0})" are the replacement parameters. Solo integers are used to represent a group in the match, bracketed integers are used to represent a user supplied parameter. 
 - arg: `-param` a parameter for the rewrite command
+    - parameterised string that can be used in the regex rewrite command
     - example: `-param myword`
+
+Example regex replacer profile commands:
+
+Replace all occurrences of "word" with "o"
+
+`-rr[-p w(o)rd -c 0(1)]`
+
+or
+
+`rr[-p word -c 0({0}) -param o`
 
 ### Example uses
 
-Replacing multi-line block java comments that only require a single line, and place a period at the end of the line:
+In all .java files, replace multi-line block java comments that only require a single line, and place a period at the end of the line:
 
 `-b[-d /Users/user/Documents/MyProject/ -e java] -rr[-p (\/\*\*)\s*\n\s*\*(.*)\n\s*(\*\/) -c 0(1,2,{0},3) -param .]`
+
+Replacing all occurrences of the letters "ä", "ö", and "ü" with their escaped counterparts ("\u00e4", "\u00f6", "\u00fc").
+Assumes an illegal character file with these letters present at location `/Users/user/Documents/chars.txt` and running the program from location `/Users/user/Documents/`
+
+`-s[-p myfile.txt] -uc[-i chars.txt]`
