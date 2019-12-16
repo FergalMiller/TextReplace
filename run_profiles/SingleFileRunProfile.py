@@ -5,7 +5,7 @@ from abstract.RunProfile import RunProfile
 from common.argument.Argument import Argument
 
 
-class SingleRunProfile(RunProfile):
+class SingleFileRunProfile(RunProfile):
     arguments: List[Argument] = [Argument("-p", "The file path.", True,
                                           r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
 

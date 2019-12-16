@@ -8,7 +8,7 @@ from common.argument.Argument import Argument
 
 
 # Bulk file rewrite profile
-class BulkRunProfile(RunProfile):
+class BulkFileRunProfile(RunProfile):
     arguments: List[Argument] = [
         Argument("-d", "The directory to traverse.", True, r'^/?([\w\-\.]+/)+$'),
         Argument("-e", "The file extension to search for.", False, r'^\.?[a-z][a-zA-Z]*$'),

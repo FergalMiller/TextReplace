@@ -7,9 +7,9 @@ from abstract.RunProfile import RunProfile
 from abstract.SchemaGenerator import SchemaGenerator
 from file_rewrite_profiles.regex_replacer.RegexReplacerRewriteProfile import RegexReplacerRewriteProfile
 from file_rewrite_profiles.unicode_replacer.UnicodeReplacerRewriteProfile import UnicodeReplacerRewriteProfile
-from run_profiles.BulkFileRewriteProfile import BulkRunProfile
-from run_profiles.SingleFileRewriteProfile import SingleRunProfile
-from schema_generators.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
+from run_profiles.BulkFileRunProfile import BulkFileRunProfile
+from run_profiles.SingleFileRunProfile import SingleFileRunProfile
+from file_rewrite_profiles.unicode_replacer.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
 
 
 def get_user_input(upper_bound: int) -> int:
@@ -105,8 +105,8 @@ schema_generators: List[SchemaGenerator] = [
 ]
 
 run_profiles: List[Type[RunProfile]] = [
-    SingleRunProfile,
-    BulkRunProfile
+    SingleFileRunProfile,
+    BulkFileRunProfile
 ]
 
 file_rewrite_profiles: List[Type[FileRewriteProfile]] = [

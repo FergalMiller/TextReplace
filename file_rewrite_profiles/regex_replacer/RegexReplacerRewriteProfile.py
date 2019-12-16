@@ -13,7 +13,7 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
         Argument("-p", "The regex pattern to match", True, ""),
         Argument("-c", "The pattern replacement command.", True,
                  r'([0-9]+)\((([0-9]+|{[0-9]+})(,([0-9]+|{[0-9]+}))*)\)'),
-        Argument("-arg", "Argument for the replacement command", False, "")
+        Argument("-param", "Argument for the replacement command", False, "")
     ]
 
     command_pattern = re.compile(r'^([0-9]+)\((([0-9]+|{[0-9]+})(,([0-9]+|{[0-9]+}))*)\)$')
@@ -47,7 +47,7 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
         return RegexRewriteCommand(replacement_group, replace_with, self.arg_list)
 
     def supply_argument_value(self, key: str, value: str):
-        if key == "-arg":
+        if key == "-param":
             self.arg_list.append(value)
         elif key == "-c":
             if self.command_pattern.search(value):
