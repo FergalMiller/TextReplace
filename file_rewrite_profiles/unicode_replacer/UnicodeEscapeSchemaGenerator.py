@@ -1,8 +1,8 @@
 import os
 import re
+from typing import Dict, Set
 
 from abstract.SchemaGenerator import SchemaGenerator
-from typing import Dict, Set
 
 
 class UnicodeSchemaGenerator(SchemaGenerator):
@@ -35,9 +35,3 @@ class UnicodeSchemaGenerator(SchemaGenerator):
             index += 1
 
         return schema
-
-    @staticmethod
-    def name() -> str: return "Unicode escape schema generator"
-
-    @staticmethod
-    def description() -> str: return "Matches non-standard characters to their unicode escaped counterpart."

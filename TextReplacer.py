@@ -4,12 +4,10 @@ from typing import Dict, List, Type
 
 from abstract.FileRewriteProfile import FileRewriteProfile
 from abstract.RunProfile import RunProfile
-from abstract.SchemaGenerator import SchemaGenerator
 from file_rewrite_profiles.regex_replacer.RegexReplacerRewriteProfile import RegexReplacerRewriteProfile
 from file_rewrite_profiles.unicode_replacer.UnicodeReplacerRewriteProfile import UnicodeReplacerRewriteProfile
 from run_profiles.BulkFileRunProfile import BulkFileRunProfile
 from run_profiles.SingleFileRunProfile import SingleFileRunProfile
-from file_rewrite_profiles.unicode_replacer.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
 
 
 def get_user_input(upper_bound: int) -> int:
@@ -24,16 +22,6 @@ def get_user_input(upper_bound: int) -> int:
         except ValueError:
             print("Could not understand. Please try again.")
             return get_user_input(upper_bound)
-
-
-def choose_schema_generator() -> SchemaGenerator:
-    print('\033[95m' + "Please choose a schema generator" + '\033[0m')
-    index = 0
-    for schema_generator in schema_generators:
-        print("Enter '" + (index + 1).__str__() + "' for " + schema_generator.name())
-        print("\t" + schema_generator.description())
-        index += 1
-    return schema_generators[get_user_input(index) - 1]
 
 
 def parse_supplied_arguments(run_profile: RunProfile, supplied_arguments: List[str]) -> Dict[str, str]:
@@ -70,7 +58,6 @@ def match_file_rewrite_profile_type(prefix: str) -> Type[FileRewriteProfile]:
 
 
 def main():
-    args = sys.argv[1:]
     command = " ".join(sys.argv[1:])
     print("Command:", command)
     command_search = command_pattern.search(command)
@@ -99,10 +86,6 @@ def main():
 
 
 command_pattern = re.compile(r'(-[a-z]+)\[(.*)\]\s*(-[a-z]+)\[(.*)\]')
-
-schema_generators: List[SchemaGenerator] = [
-    UnicodeSchemaGenerator()
-]
 
 run_profiles: List[Type[RunProfile]] = [
     SingleFileRunProfile,
