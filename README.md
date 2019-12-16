@@ -73,15 +73,19 @@ In all .java files, replace multi-line block java comments that only require a s
 `-b[-d /Users/user/Documents/MyProject/ -e java] -rr[-p (\/\*\*)\s*\n\s*\*(.*)\n\s*(\*\/) -c 0(1,2,{0},3) -param .]`
 
 Replacing all occurrences of the letters "ä", "ö", and "ü" with their escaped counterparts ("\u00e4", "\u00f6", "\u00fc").
-Assumes an illegal character file with these letters present at location `/Users/user/Documents/chars.txt` and running the program from location `/Users/user/Documents/`
+Assumes a target text file `myfile.txt` and illegal character file `chars.txt` with these letters present at location `/Users/user/Documents/` and running the program from that location:
 
 `-s[-p myfile.txt] -uc[-i chars.txt]`
 
 ## Creating your own profiles
 
-To create and use your own profiles simply create a new Python class that extends the relevant abstract profile class in package `abstract`.
+To create and use your own profiles simply create a new Python class that extends the relevant abstract profile class in package `common.profile.abstract`.
 
-If your profile requires a schema there is also a SchemaGenerator abstract class you may use as a guideline, although this is not strictly necessary.
+If your profile requires a schema there is also a SchemaGenerator abstract class you may use as a guideline in package `common.schema_generator.abstract`, although this is not strictly necessary.
 
 Once created, all you need to do is add the class type to the list (`run_profiles` or `file_rewrite_profiles`) found in TextReplacer.py. 
 Now the program can be run any time with your custom profiles!
+
+## Software requirements
+
+Python 3.x
