@@ -15,14 +15,20 @@ Some arguments are required.
 ### Run profiles
 The run profile carries out a set of instructions and invokes a file rewrite profile.
 Two run profiles are supplied as default:
-- `-s` Single file run profile
-    - arg: `-p` the path of the file to be rewritten
+
+`-s` Single file run profile
+- arg: `-p` the path of the file to be rewritten
+    - example: `-p /Users/my.user/Documents/mydocument.txt`
+    - example (running from the Documents directory): `-p mydocument.txt`
     
 
-- `-b` Bulk file run profile
-    - arg: `-d` the directory to traverse to find files within
-    - arg: `-e` a file extension filter
-    - arg: `-r` a regex pattern  filter for file names 
+`-b` Bulk file run profile
+- arg: `-d` the directory to traverse to find files within
+    - example: `-d /Users/my.user/Documents/`
+- arg: `-e` a file extension filter
+    - example: `-e txt`
+- arg: `-r` a regex pattern  filter for file names 
+    - example: `-r document$`
     
 
 ### File Rewrite Profile
@@ -33,13 +39,20 @@ Two file rewrite profiles are supplied as default:
 `-uc` Unicode replacer profile
 
 Replaces specified illegal characters with their unicode escaped counterpart.
-Note: Does require `native2ascii`.
+Note: Does require `native2ascii` to be installed on your system.
 - arg: `-i` location of the illegal characters file
-
+    - example: `-i /Users/my.user/Documents/illegal_characters.txt`
 
 `-rr` Regex replacer profile
 - arg: `-p` the regex pattern to match within the file text
+    - example: `-p ^(\w)\.$`
 - arg: `-c` the regex rewrite command
+    - example: `-c 1(2,{0})`
 - arg: `-param` a parameter for the rewrite command
+    - example: `-param myword`
 
+### Example uses
 
+Replacing multi-line block java comments that only require a single line, and place a period at the end of the line:
+
+`-b[-d /Users/user/Documents/MyProject/ -e java] -rr[-p (\/\*\*)\s*\n\s*\*(.*)\n\s*(\*\/) -c 0(1,2,{0},3) -param .]`
