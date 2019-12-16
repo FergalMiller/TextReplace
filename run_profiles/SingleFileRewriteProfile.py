@@ -6,9 +6,8 @@ from common.argument.Argument import Argument
 
 
 class SingleRunProfile(RunProfile):
-    arguments: List[Argument] = \
-        [Argument("-p", "The file path.", True, r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$'),
-            Argument("-rp", "The run profile to use", True, "")]
+    arguments: List[Argument] = [Argument("-p", "The file path.", True,
+                                          r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
 
     def __init__(self, rewrite_profile_arguments: str):
         super().__init__(rewrite_profile_arguments)
