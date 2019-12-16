@@ -76,3 +76,12 @@ Replacing all occurrences of the letters "ä", "ö", and "ü" with their escaped
 Assumes an illegal character file with these letters present at location `/Users/user/Documents/chars.txt` and running the program from location `/Users/user/Documents/`
 
 `-s[-p myfile.txt] -uc[-i chars.txt]`
+
+## Creating your own profiles
+
+To create and use your own profiles simply create a new Python class that extends the relevant abstract profile class in package `abstract`.
+
+If your profile requires a schema there is also a SchemaGenerator abstract class you may use as a guideline, although this is not strictly necessary.
+
+Once created, all you need to do is add the class type to the list (`run_profiles` or `file_rewrite_profiles`) found in TextReplacer.py. 
+Now the program can be run any time with your custom profiles!
