@@ -70,7 +70,7 @@ class BulkRunProfile(RunProfile):
             user_inp = input("Are you sure you want to carry out re-write on all files listed (y/n)? ")
             if user_inp == "y":
                 for target_file in target_files:
-                    print('\033[92m' + "Replacing illegal characters in `" + target_file + "`" + '\033[0m')
+                    print('\033[92m' + "Replacing text in `" + target_file + "`" + '\033[0m')
                     file_rewrite_profile.run(target_file)
                 break
             elif user_inp == "n":

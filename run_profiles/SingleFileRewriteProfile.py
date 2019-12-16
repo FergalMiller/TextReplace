@@ -17,7 +17,7 @@ class SingleRunProfile(RunProfile):
 
         target_file_path = self.get_argument_value("-p")
 
-        print('\033[92m' + "Replacing illegal characters in `" + target_file_path + "`" + '\033[0m')
+        print('\033[92m' + "Replacing text in `" + target_file_path + "`" + '\033[0m')
 
         file_rewrite_profile.run(target_file_path)
 

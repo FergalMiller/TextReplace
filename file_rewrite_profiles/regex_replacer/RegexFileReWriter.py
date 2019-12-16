@@ -45,6 +45,5 @@ class RegexFileReWriter(object):
         with open(target_file_path, 'r') as target_file:
             to_match = target_file.read()
             result = self.recursive_match_result(to_match)
-            print(result)
         with open(target_file_path, 'w') as target_file:
             target_file.write(result)
