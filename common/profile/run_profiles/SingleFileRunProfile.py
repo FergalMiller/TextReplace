@@ -1,8 +1,8 @@
 from typing import List
 
-from abstract.FileRewriteProfile import FileRewriteProfile
-from abstract.RunProfile import RunProfile
-from common.argument.Argument import Argument
+from common.profile.abstract.FileRewriteProfile import FileRewriteProfile
+from common.profile.abstract.RunProfile import RunProfile
+from common.profile.argument.Argument import Argument
 
 
 class SingleFileRunProfile(RunProfile):

@@ -2,12 +2,12 @@ import re
 import sys
 from typing import Dict, List, Type
 
-from abstract.FileRewriteProfile import FileRewriteProfile
-from abstract.RunProfile import RunProfile
-from file_rewrite_profiles.regex_replacer.RegexReplacerRewriteProfile import RegexReplacerRewriteProfile
-from file_rewrite_profiles.unicode_replacer.UnicodeReplacerRewriteProfile import UnicodeReplacerRewriteProfile
-from run_profiles.BulkFileRunProfile import BulkFileRunProfile
-from run_profiles.SingleFileRunProfile import SingleFileRunProfile
+from common.profile.abstract.FileRewriteProfile import FileRewriteProfile
+from common.profile.abstract.RunProfile import RunProfile
+from common.profile.file_rewrite_profiles.regex_replacer.RegexReplacerRewriteProfile import RegexReplacerRewriteProfile
+from common.profile.file_rewrite_profiles.unicode_replacer.UnicodeReplacerRewriteProfile import UnicodeReplacerRewriteProfile
+from common.profile.run_profiles.BulkFileRunProfile import BulkFileRunProfile
+from common.profile.run_profiles.SingleFileRunProfile import SingleFileRunProfile
 
 
 def get_user_input(upper_bound: int) -> int:

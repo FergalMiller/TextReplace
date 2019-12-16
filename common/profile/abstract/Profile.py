@@ -2,11 +2,13 @@ import re
 from abc import ABC, abstractmethod
 from typing import List
 
-from common.argument.Argument import Argument, ArgumentError
+from common.profile.argument.Argument import Argument, ArgumentError
 
 
 class Profile(ABC):
-
+    """
+    Profile is an abstract runnable class that can be supplied arguments to alter its behaviour.
+    """
     @abstractmethod
     def get_arguments(self) -> List[Argument]:
         pass

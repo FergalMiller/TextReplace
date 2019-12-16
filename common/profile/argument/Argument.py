@@ -1,9 +1,12 @@
 import re
 
-from common.argument.ArgumentError import ArgumentError
+from common.profile.argument.ArgumentError import ArgumentError
 
 
 class Argument(object):
+    """
+    Argument encapsulates a single argument that may be used by a Profile object
+    """
     key: str
     hint: str
     required: bool

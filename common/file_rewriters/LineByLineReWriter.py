@@ -2,6 +2,11 @@ from typing import Dict
 
 
 class LineByLineReWriter(object):
+    """"
+    LineByLineReWriter is a simple file re-writing tool.
+    It takes a target file path (as string) and a schema (as dictionary)
+    and replaces matching schema keys in each line, line by line.
+    """
     @staticmethod
     def rewrite(target_file_path: str, schema: Dict[str, str]):
         with open(target_file_path, "r") as target_file:
