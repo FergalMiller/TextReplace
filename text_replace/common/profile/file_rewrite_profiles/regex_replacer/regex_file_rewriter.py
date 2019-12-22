@@ -3,7 +3,7 @@ from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewr
 
 
 # TODO: Validate that write command does not have out of bound groups
-class RegexFileReWriter(object):
+class RegexFileRewriter(object):
     pattern: Pattern[str]
     rewrite_commands: List[RegexRewriteCommand]
 
@@ -37,7 +37,7 @@ class RegexFileReWriter(object):
             return \
                 match_split[0] + \
                 modified_match + \
-                RegexFileReWriter.recursive_match_result(self, match_split[no_of_groups + 1])
+                RegexFileRewriter.recursive_match_result(self, match_split[no_of_groups + 1])
         return to_match
 
     def rewrite_file(self, target_file_path: str):

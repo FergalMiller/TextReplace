@@ -1,7 +1,7 @@
 from typing import Dict
 
 
-class LineByLineReWriter(object):
+class LineByLineRewriter(object):
     """"
     LineByLineReWriter is a simple file re-writing tool.
     It takes a target file path (as string) and a schema (as dictionary)

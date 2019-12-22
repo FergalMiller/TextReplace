@@ -3,7 +3,7 @@ from typing import List, Pattern
 
 from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
 from text_replace.common.profile.argument.argument import Argument
-from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_file_rewriter import RegexFileReWriter
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_file_rewriter import RegexFileRewriter
 from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewrite_command import RegexRewriteCommand
 
 
@@ -32,7 +32,7 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
             compiled_command: RegexRewriteCommand = self.generate_rewrite_command(string_rewrite_command)
             self.compiled_rewrite_commands.append(compiled_command)
 
-        re_writer = RegexFileReWriter(pattern, self.compiled_rewrite_commands)
+        re_writer = RegexFileRewriter(pattern, self.compiled_rewrite_commands)
         re_writer.rewrite_file(target_file_path)
 
     def get_arguments(self) -> List[Argument]: return self.arguments

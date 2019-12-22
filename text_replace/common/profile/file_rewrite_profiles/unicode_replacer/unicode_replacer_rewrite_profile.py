@@ -2,7 +2,7 @@ from typing import List, Set
 
 from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
 from text_replace.common.profile.argument.argument import Argument
-from text_replace.common.file_rewriters.line_by_line_rewriter import LineByLineReWriter
+from text_replace.common.file_rewriters.line_by_line_rewriter import LineByLineRewriter
 from text_replace.common.profile.file_rewrite_profiles.unicode_replacer.unicode_escape_schema_generator import UnicodeSchemaGenerator
 
 
@@ -31,7 +31,7 @@ class UnicodeReplacerRewriteProfile(FileRewriteProfile):
         illegal_character_location = self.get_argument("-i").value
         illegal_characters = UnicodeReplacerRewriteProfile.get_illegal_characters(illegal_character_location)
         schema = UnicodeSchemaGenerator.generate_schema(illegal_characters)
-        LineByLineReWriter.rewrite(target_file_path, schema)
+        LineByLineRewriter.rewrite(target_file_path, schema)
 
     def get_arguments(self) -> List[Argument]: return self.arguments
 
