@@ -1,9 +1,9 @@
 from typing import List, Set
 
-from common.profile.abstract.FileRewriteProfile import FileRewriteProfile
-from common.profile.argument.Argument import Argument
-from common.file_rewriters.LineByLineReWriter import LineByLineReWriter
-from common.profile.file_rewrite_profiles.unicode_replacer.UnicodeEscapeSchemaGenerator import UnicodeSchemaGenerator
+from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
+from text_replace.common.profile.argument.argument import Argument
+from text_replace.common.file_rewriters.line_by_line_rewriter import LineByLineReWriter
+from text_replace.common.profile.file_rewrite_profiles.unicode_replacer.unicode_escape_schema_generator import UnicodeSchemaGenerator
 
 
 class UnicodeReplacerRewriteProfile(FileRewriteProfile):

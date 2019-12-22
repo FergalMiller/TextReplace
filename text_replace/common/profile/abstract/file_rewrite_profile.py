@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from common.profile.abstract.Profile import Profile
+from text_replace.common.profile.abstract.profile import Profile
 
 
 class FileRewriteProfile(Profile, ABC):

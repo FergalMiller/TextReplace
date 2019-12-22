@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from common.profile.abstract.Profile import Profile
-from common.profile.abstract.FileRewriteProfile import FileRewriteProfile
+from text_replace.common.profile.abstract.profile import Profile
+from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
 
 
 class RunProfile(Profile, ABC):

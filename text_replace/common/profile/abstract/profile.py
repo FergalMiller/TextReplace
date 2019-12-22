@@ -2,7 +2,7 @@ import re
 from abc import ABC, abstractmethod
 from typing import List
 
-from common.profile.argument.Argument import Argument, ArgumentError
+from text_replace.common.profile.argument.argument import Argument, ArgumentError
 
 
 class Profile(ABC):

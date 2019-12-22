@@ -1,10 +1,10 @@
 import re
 from typing import List, Pattern
 
-from common.profile.abstract.FileRewriteProfile import FileRewriteProfile
-from common.profile.argument.Argument import Argument
-from common.profile.file_rewrite_profiles.regex_replacer.RegexFileReWriter import RegexFileReWriter
-from common.profile.file_rewrite_profiles.regex_replacer.RegexRewriteCommand import RegexRewriteCommand
+from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
+from text_replace.common.profile.argument.argument import Argument
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_file_rewriter import RegexFileReWriter
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewrite_command import RegexRewriteCommand
 
 
 # comment = r'(/\*\s*\n\s*\*(.*)\n\s*\*\*/)'

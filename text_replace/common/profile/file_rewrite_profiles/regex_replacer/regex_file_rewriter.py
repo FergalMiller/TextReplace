@@ -1,5 +1,5 @@
 from typing import Pattern, List
-from common.profile.file_rewrite_profiles.regex_replacer.RegexRewriteCommand import RegexRewriteCommand
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewrite_command import RegexRewriteCommand
 
 
 # TODO: Validate that write command does not have out of bound groups

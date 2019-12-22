@@ -2,9 +2,9 @@ import os
 import re
 from typing import List
 
-from common.profile.abstract.FileRewriteProfile import FileRewriteProfile
-from common.profile.abstract.RunProfile import RunProfile
-from common.profile.argument.Argument import Argument
+from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
+from text_replace.common.profile.abstract.run_profile import RunProfile
+from text_replace.common.profile.argument.argument import Argument
 
 
 # Bulk file rewrite profile

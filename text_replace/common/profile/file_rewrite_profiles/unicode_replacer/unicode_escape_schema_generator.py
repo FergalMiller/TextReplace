@@ -2,7 +2,7 @@ import os
 import re
 from typing import Dict, Set
 
-from common.schema_generator.abstract.SchemaGenerator import SchemaGenerator
+from text_replace.common.schema_generator.abstract.schema_generator import SchemaGenerator
 
 
 class UnicodeSchemaGenerator(SchemaGenerator):

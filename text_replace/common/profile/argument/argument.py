@@ -1,6 +1,6 @@
 import re
 
-from common.profile.argument.ArgumentError import ArgumentError
+from text_replace.common.profile.argument.argument_error import ArgumentError
 
 
 class Argument(object):
