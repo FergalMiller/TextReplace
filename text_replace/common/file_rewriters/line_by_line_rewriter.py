@@ -13,8 +13,8 @@ class LineByLineRewriter(object):
             lines = target_file.readlines()
             index = 0
             for line in lines:
-                for illegal_character in schema.keys():
-                    line = line.replace(illegal_character, schema[illegal_character])
+                for illegal_string in schema.keys():
+                    line = line.replace(illegal_string, schema[illegal_string])
                 lines[index] = line.__str__()
                 index += 1
 
