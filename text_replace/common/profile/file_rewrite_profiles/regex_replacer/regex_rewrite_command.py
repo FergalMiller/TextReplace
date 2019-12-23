@@ -1,5 +1,7 @@
 import re
-from typing import List, Pattern
+from typing import List, Pattern, Tuple, Match
+
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_util.regex_util import GroupMatch, RegexUtil
 
 
 class RegexRewriteCommand(object):
@@ -23,38 +25,17 @@ class RegexRewriteCommand(object):
         self.validate_command_arguments()
 
     def get_replacement(self, full_match: str, pattern: Pattern[str]) -> str:
-        groups = pattern.split(full_match)
+        group_match: GroupMatch = RegexUtil.get_group_match(full_match, pattern)
         result = ""
         for replacement in self.replace_with:
             search = self.argument_pattern.search(replacement)
             if search:
-                result += self.arguments[int(search.group(1))]
+                replacement_argument_index = int(search.group(1))
+                result += self.arguments[replacement_argument_index]
             else:
-                group_to_replace = groups[int(replacement)]
-                if group_to_replace == 0:
+                replacement_group_index = int(replacement)
+                if replacement_group_index == 0:
                     result += full_match
                 else:
-                    result += groups[int(replacement)]
+                    result += group_match.get_value_of_group(int(replacement))
         return result
-
-
-class RegexRewriteCommandBuilder(object):
-    group_to_replace: int
-    replace_with: List[str]
-    arguments = List[str]
-    num_of_arguments: int
-
-    def __init__(self, group_to_replace: int):
-        self.group_to_replace = group_to_replace
-        self.num_of_arguments = 0
-
-    def add_argument(self, argument: str):
-        self.arguments.append(argument)
-        return self
-
-    def set_replace_with(self, replace_with: List[str]):
-        self.replace_with = replace_with
-        return self
-
-    def build(self) -> RegexRewriteCommand:
-        return RegexRewriteCommand(self.group_to_replace, self.replace_with, self.arguments)
