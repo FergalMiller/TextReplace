@@ -31,8 +31,8 @@ class Argument(object):
 
     def self_validate(self):
         if self.required and not self.has_value():
-            raise ArgumentError("Required argument '" + self.key +
-                                "' (" + self.hint + ") to run with this profile")
+            raise ArgumentError("Cannot validate argument with key '" + self.key +
+                                "' (" + self.hint + "), a value is required.")
         if self.has_value_pattern() and self.has_value():
             if not re.match(self.value_pattern, self.value):
                 raise ArgumentError("Value supplied to argument " + self.key +
