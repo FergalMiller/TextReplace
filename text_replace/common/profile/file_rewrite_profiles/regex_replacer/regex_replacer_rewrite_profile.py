@@ -29,7 +29,8 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
         pattern: Pattern[str] = re.compile(pattern_as_string)
 
         for string_rewrite_command in self.string_rewrite_commands:
-            compiled_command: RegexRewriteCommand = self.generate_rewrite_command(string_rewrite_command)
+            compiled_command: RegexRewriteCommand = \
+                RegexRewriteCommand.generate_rewrite_command(string_rewrite_command, self.arg_list)
             self.compiled_rewrite_commands.append(compiled_command)
 
         re_writer = RegexFileRewriter(pattern, self.compiled_rewrite_commands)
@@ -39,12 +40,6 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
 
     @staticmethod
     def command() -> str: return "-rr"
-
-    def generate_rewrite_command(self, command_as_string: str) -> RegexRewriteCommand:
-        search = self.command_pattern.search(command_as_string)
-        replacement_group = int(search.group(1))
-        replace_with: List[str] = search.group(2).split(",")
-        return RegexRewriteCommand(replacement_group, replace_with, self.arg_list)
 
     def supply_argument_value(self, key: str, value: str):
         if key == "-param":

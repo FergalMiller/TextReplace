@@ -39,3 +39,14 @@ class RegexRewriteCommand(object):
                 else:
                     result += group_match.get_value_of_group(int(replacement))
         return result
+
+    @staticmethod
+    def generate_rewrite_command(command_as_string: str, arg_list: List[str]) -> 'RegexRewriteCommand':
+        pattern = RegexRewriteCommand.get_pattern()
+        search = pattern.search(command_as_string)
+        replacement_group = int(search.group(1))
+        replace_with: List[str] = search.group(2).split(",")
+        return RegexRewriteCommand(replacement_group, replace_with, arg_list)
+
+    @staticmethod
+    def get_pattern() -> Pattern: return re.compile(r'^([0-9]+)\((([0-9]+|{[0-9]+})(,([0-9]+|{[0-9]+}))*)\)$')

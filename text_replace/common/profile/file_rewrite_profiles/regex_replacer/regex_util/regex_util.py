@@ -14,6 +14,8 @@ class GroupMatch(object):
 
     def add_group(self, group: Tuple[str, int, int]): self.groups.append(group)
 
+    def num_of_groups(self): return len(self.groups) - 1
+
 
 class RegexUtil:
     @staticmethod
@@ -27,4 +29,3 @@ class RegexUtil:
             as_tuple = (value, begin_position, end_position)
             group_match.add_group(as_tuple)
         return group_match
-

@@ -1,5 +1,7 @@
 from typing import Pattern, List
+
 from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewrite_command import RegexRewriteCommand
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_util.regex_util import RegexUtil
 
 
 # TODO: Validate that write command does not have out of bound groups
@@ -15,14 +17,16 @@ class RegexFileRewriter(object):
         result = full_match
         for rewrite_command in self.rewrite_commands:
             if self.pattern.search(result):
-                match_split = self.pattern.split(full_match)
-                to_replace: str
-                if rewrite_command.group_to_replace == 0:
-                    to_replace = full_match
-                else:
-                    to_replace = match_split[rewrite_command.group_to_replace]
-                replace_with = rewrite_command.get_replacement(full_match, self.pattern)
-                result = result.replace(to_replace, replace_with)
+                group_to_replace = rewrite_command.group_to_replace
+
+                group_match = RegexUtil.get_group_match(result, self.pattern)
+
+                replacement_begin_index = group_match.get_begin_position_of_group(group_to_replace)
+                replacement_end_index = group_match.get_end_position_of_group(group_to_replace)
+
+                replace_with = rewrite_command.get_replacement(result, self.pattern)
+
+                result = result[:replacement_begin_index] + replace_with + result[replacement_end_index:]
             else:
                 break
         return result
@@ -37,7 +41,7 @@ class RegexFileRewriter(object):
             return \
                 match_split[0] + \
                 modified_match + \
-                RegexFileRewriter.recursive_match_result(self, match_split[no_of_groups + 1])
+                self.recursive_match_result(match_split[no_of_groups + 1])
         return to_match
 
     def rewrite_file(self, target_file_path: str):
