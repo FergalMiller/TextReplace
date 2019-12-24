@@ -26,7 +26,9 @@ class RegexFileRewriter(object):
 
                 replace_with = rewrite_command.get_replacement(result, self.pattern)
 
-                result = result[:replacement_begin_index] + replace_with + result[replacement_end_index:]
+                # Indices less than 0 are quantifier matches that have not been found e.g. (\s)?
+                if replacement_begin_index >= 0:
+                    result = result[:replacement_begin_index] + replace_with + result[replacement_end_index:]
             else:
                 break
         return result
