@@ -5,15 +5,15 @@ from test.test_utils import TestUtils
 from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_file_rewriter import RegexFileRewriter
 from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewrite_command import RegexRewriteCommand
 
-resource_file_path: str = "TEST_RESOURCE_FILE.txt"
+resource_file_path: str = TestUtils.get_resource_path()
 
 
 def setup_module():
-    TestUtils.create_resource_file(resource_file_path)
+    TestUtils.create_resource_file()
 
 
 def teardown_module():
-    TestUtils.destroy_resource_file(resource_file_path)
+    TestUtils.destroy_resource_file()
 
 
 def generate_rewriter(pattern: str, rewrite_commands: List[str], arguments: List[str]) -> RegexFileRewriter:
@@ -104,9 +104,9 @@ def test_recursive_replace_with_group_that_may_exist():
 def test_rewriter_with_arguments():
     rewriter: RegexFileRewriter = generate_rewriter(r'^\w(\w*)\w$', ['1({0})'], ['middle'])
 
-    TestUtils.overwrite_resource_file_content(resource_file_path, "bing")
+    TestUtils.overwrite_resource_file_content("bing")
 
     rewriter.rewrite_file(resource_file_path)
 
-    content = TestUtils.fetch_resource_file_content(resource_file_path)
+    content = TestUtils.fetch_resource_file_content()
     assert content == "bmiddleg"

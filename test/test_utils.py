@@ -3,24 +3,27 @@ import os
 
 class TestUtils:
     @staticmethod
-    def create_resource_file(resource_file_path: str):
-        open(resource_file_path, 'w').close()
+    def create_resource_file():
+        open(TestUtils.get_resource_path(), 'w').close()
 
     @staticmethod
-    def destroy_resource_file(resource_file_path: str):
-        os.remove(resource_file_path)
+    def destroy_resource_file():
+        os.remove(TestUtils.get_resource_path())
 
     @staticmethod
-    def overwrite_resource_file_content(resource_file_path: str, content: str):
-        with open(resource_file_path, 'w') as resource:
+    def overwrite_resource_file_content(content: str):
+        with open(TestUtils.get_resource_path(), 'w') as resource:
             return resource.write(content)
 
     @staticmethod
-    def append_resource_file_content(resource_file_path:str, content: str):
-        with open(resource_file_path, 'a') as resource:
+    def append_resource_file_content(content: str):
+        with open(TestUtils.get_resource_path(), 'a') as resource:
             return resource.write(content)
 
     @staticmethod
-    def fetch_resource_file_content(resource_file_path: str) -> str:
-        with open(resource_file_path, 'r') as resource:
+    def fetch_resource_file_content() -> str:
+        with open(TestUtils.get_resource_path(), 'r') as resource:
             return resource.read()
+
+    @staticmethod
+    def get_resource_path(): return "TEST__RESOURCE__FILE.txt"
