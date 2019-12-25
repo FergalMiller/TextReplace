@@ -16,8 +16,6 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
     ]
     supplied_argument_pattern: Pattern[str] = re.compile(r'(-\w+)\s?(\'(((\\\')|[^\'])+)\'|[^\s]+)')
     param_input_pattern: Pattern[str] = re.compile(r'\'(((\\\')|[^\'])+)\'')
-
-    command_pattern = re.compile(r'^([0-9]+)\((([0-9]+|{[0-9]+})(,([0-9]+|{[0-9]+}))*)\)$')
     string_rewrite_commands: List[str] = []
     compiled_rewrite_commands: List[RegexRewriteCommand] = []
     arg_list: List[str] = []
@@ -60,7 +58,6 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
                 self.string_rewrite_commands.append(value)
                 self.get_argument("-c").value = value
             else:
-                # TODO: Handle
                 raise Exception("Rewrite command not formatted correctly.")
         else:
             super().supply_argument_value(key, value)
