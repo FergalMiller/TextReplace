@@ -38,4 +38,7 @@ class UnicodeReplacerRewriteProfile(FileRewriteProfile):
     @staticmethod
     def command() -> str: return "-uc"
 
+    @staticmethod
+    def description() -> str: return "Rewrites all matching illegal characters to their escaped unicode counterpart."
+
     def __init__(self, arguments: str): super().__init__(arguments)

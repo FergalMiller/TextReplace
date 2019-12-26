@@ -4,7 +4,11 @@ import re
 import sys
 from typing import Dict, List, Type
 
+from prompt_toolkit import prompt, PromptSession
+from prompt_toolkit.completion import WordCompleter
+
 from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
+from text_replace.common.profile.abstract.profile import Profile
 from text_replace.common.profile.abstract.run_profile import RunProfile
 from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_replacer_rewrite_profile import \
     RegexReplacerRewriteProfile
@@ -47,21 +51,69 @@ def parse_supplied_arguments(run_profile: RunProfile, supplied_arguments: List[s
     return result
 
 
-def match_run_profile_type(prefix: str) -> Type[RunProfile]:
+def list_profiles(profiles: List[Type[Profile]], profile_type: str):
+    print("All available " + profile_type + " profiles:")
+    for profile in profiles:
+        profile_command = profile.command()
+        profile_description = profile.description()
+        print('\033[92m' + profile_command + '\033[0m' + ": " + profile_description)
+    print()
+
+
+def match_run_profile(prefix: str) -> Type[RunProfile]:
     for profile in run_profiles:
         if prefix == profile.command():
             return profile
-    raise Exception("No run profile with prefix ", prefix)
+    raise Exception("No run profile with prefix " + prefix)
 
 
-def match_file_rewrite_profile_type(prefix: str) -> Type[FileRewriteProfile]:
+def prompt_run_profile() -> Type[RunProfile]:
+    available_commands: List[str] = ["list"]
+    for profile in run_profiles:
+        available_commands.append(profile.command())
+    user_input = prompt("Please enter the command for the run profile you would like to use: ",
+                        completer=WordCompleter(available_commands))
+    try:
+        if user_input == "list":
+            list_profiles(run_profiles, "run")
+        else:
+            return match_run_profile(user_input)
+    except Exception as e:
+        print('\033[91m' + e.__str__() + '\033[0m')
+    return prompt_run_profile()
+
+
+def match_file_rewrite_profile(prefix: str) -> Type[FileRewriteProfile]:
     for profile in file_rewrite_profiles:
         if prefix == profile.command():
             return profile
-    raise Exception("No rewrite profile with prefix ", prefix)
+    raise Exception("No rewrite profile with prefix " + prefix)
+
+
+def prompt_file_rewrite_profile() -> Type[FileRewriteProfile]:
+    available_commands: List[str] = ["list"]
+    for profile in file_rewrite_profiles:
+        available_commands.append(profile.command())
+    user_input = prompt("Please enter the command for the file rewrite profile you would like to use: ",
+                        completer=WordCompleter(available_commands))
+    try:
+        if user_input == "list":
+            list_profiles(file_rewrite_profiles, "file rewrite")
+        else:
+            return match_file_rewrite_profile(user_input)
+    except Exception as e:
+        print('\033[91m' + e.__str__() + '\033[0m')
+    return prompt_file_rewrite_profile()
 
 
 def main():
+    run_profile = prompt_run_profile()
+    file_rewrite_profile = prompt_file_rewrite_profile()
+
+    print("Chosen")
+    print(run_profile)
+    print(file_rewrite_profile)
+    '''
     command = " ".join(sys.argv[1:])
     print("Command:", command)
     command_search = command_pattern.search(command)
@@ -87,6 +139,7 @@ def main():
     rewrite_profile: FileRewriteProfile = rewrite_profile_type(rewrite_profile_args)
 
     run_profile.run(rewrite_profile)
+    '''
 
 
 command_pattern = re.compile(r'(-[a-z]+)\[(.*)\]\s*(-[a-z]+)\[(.*)\]')

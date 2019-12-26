@@ -37,9 +37,6 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
 
     def get_arguments(self) -> List[Argument]: return self.arguments
 
-    @staticmethod
-    def command() -> str: return "-rr"
-
     def parse_param(self, value: str) -> str:
         search = self.param_input_pattern.search(value)
         if search:
@@ -82,3 +79,11 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
                     self.supply_argument_value(key, value)
                 except AttributeError:
                     print("Could not understand argument: ", arg)
+
+    @staticmethod
+    def command() -> str:
+        return "-rr"
+
+    @staticmethod
+    def description() -> str:
+        return "Rewrites regex pattern matches based on supplied regex rewrite commands."

@@ -15,8 +15,11 @@ class Profile(ABC):
 
     @staticmethod
     @abstractmethod
-    def command() -> str:
-        pass
+    def command() -> str: pass
+
+    @staticmethod
+    @abstractmethod
+    def description() -> str: pass
 
     @abstractmethod
     def __init__(self, arguments: str):

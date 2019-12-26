@@ -82,4 +82,7 @@ class BulkFileRunProfile(RunProfile):
     @staticmethod
     def command() -> str: return "-b"
 
+    @staticmethod
+    def description() -> str: return "Runs a file rewrite profile on files in a given directory."
+
     def get_arguments(self) -> List[Argument]: return self.arguments

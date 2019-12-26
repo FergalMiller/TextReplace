@@ -23,4 +23,7 @@ class SingleFileRunProfile(RunProfile):
     @staticmethod
     def command() -> str: return "-s"
 
+    @staticmethod
+    def description() -> str: return "Runs a file rewrite profile on a single file."
+
     def get_arguments(self) -> List[Argument]: return self.arguments
