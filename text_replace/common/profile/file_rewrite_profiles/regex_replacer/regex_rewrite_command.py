@@ -1,5 +1,5 @@
 import re
-from typing import List, Pattern, Tuple, Match
+from typing import List, Pattern
 
 from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_util.regex_util import GroupMatch, RegexUtil
 
