@@ -93,20 +93,41 @@ def prompt_file_rewrite_profile() -> Type[FileRewriteProfile]:
     return prompt_file_rewrite_profile()
 
 
-def prompt_get_profile_arguments(profile: Type[Profile]):
+def generate_argument_toolbar(profile: Type[Profile]) -> str:
+    arguments = profile.get_static_arguments()
+    num_of_arguments = len(arguments)
+    toolbar_text = ""
+    i = 0
+    while i < num_of_arguments:
+        argument = arguments[i]
+        if i > 0:
+            toolbar_text += '\n'
+        toolbar_text += argument.key + ": " + argument.hint
+        i += 1
+    return toolbar_text
+
+
+def prompt_get_profile_arguments(profile: Type[Profile]) -> str:
     arguments = profile.get_static_arguments()
     argument_keys: List[str] = []
     for argument in arguments:
         argument_keys.append(argument.key)
+    return prompt("Please enter the string of arguments you would like to supply the profile: ",
+                  completer=WordCompleter(argument_keys),
+                  bottom_toolbar=generate_argument_toolbar(profile))
 
 
 def main():
     run_profile = prompt_run_profile()
-    file_rewrite_profile = prompt_file_rewrite_profile()
+    run_profile_arguments = prompt_get_profile_arguments(run_profile)
+    run_profile = run_profile(run_profile_arguments)
 
-    print("Chosen")
-    print(run_profile)
-    print(file_rewrite_profile)
+    file_rewrite_profile = prompt_file_rewrite_profile()
+    file_rewrite_profile_arguments = prompt_get_profile_arguments(file_rewrite_profile)
+    file_rewrite_profile = file_rewrite_profile(file_rewrite_profile_arguments)
+
+    run_profile.run(file_rewrite_profile)
+
     '''
     command = " ".join(sys.argv[1:])
     print("Command:", command)
