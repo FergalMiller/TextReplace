@@ -1,11 +1,15 @@
+#!/usr/bin/python
+
 import re
 import sys
 from typing import Dict, List, Type
 
 from text_replace.common.profile.abstract.file_rewrite_profile import FileRewriteProfile
 from text_replace.common.profile.abstract.run_profile import RunProfile
-from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_replacer_rewrite_profile import RegexReplacerRewriteProfile
-from text_replace.common.profile.file_rewrite_profiles.unicode_replacer.unicode_replacer_rewrite_profile import UnicodeReplacerRewriteProfile
+from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_replacer_rewrite_profile import \
+    RegexReplacerRewriteProfile
+from text_replace.common.profile.file_rewrite_profiles.unicode_replacer.unicode_replacer_rewrite_profile import \
+    UnicodeReplacerRewriteProfile
 from text_replace.common.profile.run_profiles.bulk_file_run_profile import BulkFileRunProfile
 from text_replace.common.profile.run_profiles.single_file_run_profile import SingleFileRunProfile
 
