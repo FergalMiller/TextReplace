@@ -9,11 +9,7 @@ from text_replace.common.profile.argument.argument import Argument
 
 # Bulk file rewrite profile
 class BulkFileRunProfile(RunProfile):
-    arguments: List[Argument] = [
-        Argument("-d", "The directory to traverse.", True, r'^/?([\w\-\.]+/)+$'),
-        Argument("-e", "The file extension to search for.", False, r'^\.?[a-z][a-zA-Z]*$'),
-        Argument("-r", "The regex pattern to match file names.", False, "")
-    ]
+    arguments: List[Argument]
 
     def __init__(self, rewrite_profile_arguments: str):
         super().__init__(rewrite_profile_arguments)
@@ -27,8 +23,8 @@ class BulkFileRunProfile(RunProfile):
         if not matches_extension_filter and extension.__eq__(self.get_argument_value("-e")):
             matches_extension_filter = True
         if not matches_pattern_filter:
-            custom_pattern = self.get_argument_value("-r")
-            if re.search(custom_pattern, file_name):
+            custom_pattern = re.compile(self.get_argument_value("-r"))
+            if custom_pattern.search(file_name):
                 matches_pattern_filter = True
 
         # File is verified if all filter matches true
@@ -84,5 +80,12 @@ class BulkFileRunProfile(RunProfile):
 
     @staticmethod
     def description() -> str: return "Runs a file rewrite profile on files in a given directory."
+
+    @staticmethod
+    def get_static_arguments() -> List[Argument]:
+        return [
+            Argument("-d", "The directory to traverse.", True, r'^/?([\w\-\.]+/)+$'),
+            Argument("-e", "The file extension to search for.", False, r'^\.?[a-z][a-zA-Z]*$'),
+            Argument("-r", "The regex pattern to match file names.", False, "")]
 
     def get_arguments(self) -> List[Argument]: return self.arguments

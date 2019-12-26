@@ -10,8 +10,7 @@ class Profile(ABC):
     Profile is an abstract runnable class that can be supplied arguments to alter its behaviour.
     """
     @abstractmethod
-    def get_arguments(self) -> List[Argument]:
-        pass
+    def get_arguments(self) -> List[Argument]: pass
 
     @staticmethod
     @abstractmethod
@@ -21,8 +20,13 @@ class Profile(ABC):
     @abstractmethod
     def description() -> str: pass
 
+    @staticmethod
+    @abstractmethod
+    def get_static_arguments() -> List[Argument]: pass
+
     @abstractmethod
     def __init__(self, arguments: str):
+        self.arguments = self.get_static_arguments()
         self.parse_supplied_arguments(arguments)
         self.validate_arguments()
 

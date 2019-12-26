@@ -7,10 +7,7 @@ from text_replace.common.profile.file_rewrite_profiles.unicode_replacer.unicode_
 
 
 class UnicodeReplacerRewriteProfile(FileRewriteProfile):
-    arguments = [Argument("-i",
-                          "Location of the illegal characters file",
-                          True,
-                          r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
+    arguments: List[Argument]
 
     @staticmethod
     def get_illegal_characters(illegal_characters_location) -> Set[str]:
@@ -40,5 +37,12 @@ class UnicodeReplacerRewriteProfile(FileRewriteProfile):
 
     @staticmethod
     def description() -> str: return "Rewrites all matching illegal characters to their escaped unicode counterpart."
+
+    @staticmethod
+    def get_static_arguments() -> List[Argument]:
+        return [Argument("-i",
+                         "Location of the illegal characters file",
+                         True,
+                         r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
 
     def __init__(self, arguments: str): super().__init__(arguments)

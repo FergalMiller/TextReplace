@@ -8,12 +8,7 @@ from text_replace.common.profile.file_rewrite_profiles.regex_replacer.regex_rewr
 
 
 class RegexReplacerRewriteProfile(FileRewriteProfile):
-    arguments = [
-        Argument("-p", "The regex pattern to match", True, ""),
-        Argument("-c", "The pattern replacement command.", True,
-                 r'([0-9]+)\((([0-9]+|{[0-9]+})(,([0-9]+|{[0-9]+}))*)\)'),
-        Argument("-param", "Argument for the replacement command", False, r'\"(((\\\')|[^\'])+)\"')
-    ]
+    arguments: List[Argument]
     supplied_argument_pattern: Pattern[str] = re.compile(r'(-\w+)\s?(\'(((\\\')|[^\'])+)\'|[^\s]+)')
     param_input_pattern: Pattern[str] = re.compile(r'\'(((\\\')|[^\'])+)\'')
     string_rewrite_commands: List[str] = []
@@ -87,3 +82,11 @@ class RegexReplacerRewriteProfile(FileRewriteProfile):
     @staticmethod
     def description() -> str:
         return "Rewrites regex pattern matches based on supplied regex rewrite commands."
+
+    @staticmethod
+    def get_static_arguments() -> List[Argument]:
+        return [
+            Argument("-p", "The regex pattern to match", True, ""),
+            Argument("-c", "The pattern replacement command.", True,
+                     r'([0-9]+)\((([0-9]+|{[0-9]+})(,([0-9]+|{[0-9]+}))*)\)'),
+            Argument("-param", "Argument for the replacement command", False, r'\"(((\\\')|[^\'])+)\"')]
