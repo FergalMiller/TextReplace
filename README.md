@@ -104,3 +104,8 @@ Now the program can be run any time with your custom profiles!
 ## Software requirements
 
 Python 3.x
+
+## Testing
+
+Unit tests utilise `pytest`.
+From the root program directory, use command `python3 -m pytest` to run all tests.

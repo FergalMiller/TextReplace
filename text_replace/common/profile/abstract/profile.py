@@ -58,16 +58,16 @@ class Profile(ABC):
                     value = argument_matcher.group(2)
                     self.supply_argument_value(key, value)
                 except AttributeError:
-                    print("Could not understand argument: ", supplied_argument)
+                    raise ArgumentError("Could not understand argument: " + supplied_argument)
 
     def validate_arguments(self):
         error_found = False
+        reasons: List[str] = []
         for argument in self.get_arguments():
             try:
                 argument.self_validate()
             except ArgumentError as e:
                 error_found = True
-                print('\033[91m' + "Argument error: " + e.reason + '\033[0m')
+                reasons.append(e.reason)
         if error_found:
-            print("Exiting...")
-            exit(1)
+            raise ArgumentError(reasons.__str__())
