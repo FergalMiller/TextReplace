@@ -6,8 +6,7 @@ from text_replace.common.profile.argument.argument import Argument
 
 
 class SingleFileRunProfile(RunProfile):
-    arguments: List[Argument] = [Argument("-p", "The file path.", True,
-                                          r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
+    arguments: List[Argument]
 
     def __init__(self, rewrite_profile_arguments: str):
         super().__init__(rewrite_profile_arguments)
@@ -22,5 +21,12 @@ class SingleFileRunProfile(RunProfile):
 
     @staticmethod
     def command() -> str: return "-s"
+
+    @staticmethod
+    def description() -> str: return "Runs a file rewrite profile on a single file."
+
+    @staticmethod
+    def get_static_arguments() -> List[Argument]:
+        return [Argument("-p", "The file path.", True,r'^(/?([\w\-\.]+/)+)*([\w\-\.]+)\.([a-z][a-zA-Z]*)$')]
 
     def get_arguments(self) -> List[Argument]: return self.arguments

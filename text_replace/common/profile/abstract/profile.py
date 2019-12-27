@@ -10,16 +10,23 @@ class Profile(ABC):
     Profile is an abstract runnable class that can be supplied arguments to alter its behaviour.
     """
     @abstractmethod
-    def get_arguments(self) -> List[Argument]:
-        pass
+    def get_arguments(self) -> List[Argument]: pass
 
     @staticmethod
     @abstractmethod
-    def command() -> str:
-        pass
+    def command() -> str: pass
+
+    @staticmethod
+    @abstractmethod
+    def description() -> str: pass
+
+    @staticmethod
+    @abstractmethod
+    def get_static_arguments() -> List[Argument]: pass
 
     @abstractmethod
     def __init__(self, arguments: str):
+        self.arguments = self.get_static_arguments()
         self.parse_supplied_arguments(arguments)
         self.validate_arguments()
 
@@ -51,16 +58,16 @@ class Profile(ABC):
                     value = argument_matcher.group(2)
                     self.supply_argument_value(key, value)
                 except AttributeError:
-                    print("Could not understand argument: ", supplied_argument)
+                    raise ArgumentError("Could not understand argument: " + supplied_argument)
 
     def validate_arguments(self):
         error_found = False
+        reasons: List[str] = []
         for argument in self.get_arguments():
             try:
                 argument.self_validate()
             except ArgumentError as e:
                 error_found = True
-                print('\033[91m' + "Argument error: " + e.reason + '\033[0m')
+                reasons.append(e.reason)
         if error_found:
-            print("Exiting...")
-            exit(1)
+            raise ArgumentError(reasons.__str__())
